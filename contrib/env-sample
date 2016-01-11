@@ -1,4 +1,4 @@
-SECRET_KEY=THIS_IS_NOT_A_GOOD_SECRET
+SECRET_KEY=2bh%3+$t!=l1hzwo^zt^8vwn!pe0rk&6j5p(7z0x#@wen$_#qo
 DEBUG=True
 ALLOWED_HOSTS=127.0.0.1, .localhost, .herokuapp.com
 EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
