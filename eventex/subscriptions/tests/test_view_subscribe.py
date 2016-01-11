@@ -1,4 +1,5 @@
 from django.core import mail
+from django.core.signing import Signer
 from django.test import TestCase
 from eventex.subscriptions.forms import SubscriptionForm
 from eventex.subscriptions.models import Subscription
@@ -45,8 +46,10 @@ class SubscribePostValid(TestCase):
         self.resp = self.client.post('/inscricao/', data)
 
     def test_post(self):
-        """Valid POST should redirect to /inscricao/1:8s5VTSGWF2nNu_iTg7UUQ5Tg94Y/"""
-        self.assertRedirects(self.resp, '/inscricao/1:8s5VTSGWF2nNu_iTg7UUQ5Tg94Y/')
+        """Valid POST should redirect to /inscricao/<PK>:<PK_SIGNED>/"""
+        signer = Signer()
+        pk_signed = signer.sign('1')
+        self.assertRedirects(self.resp, '/inscricao/{}/'.format(pk_signed))
 
     def test_send_subscribe_email(self):
         self.assertEqual(1, len(mail.outbox))
