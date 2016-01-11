@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core import mail
+from django.core import signing
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template.loader import render_to_string
@@ -29,7 +30,10 @@ def create(request):
                'subscriptions/subscription_email.txt',
                {'subscription': subscription})
 
-    return HttpResponseRedirect('/inscricao/{}/'.format(subscription.pk))
+    signer = signing.Signer()
+    pk_signed = signer.sign(subscription.pk)
+
+    return HttpResponseRedirect('/inscricao/{}/'.format(pk_signed))
 
 
 def new(request):
@@ -39,7 +43,13 @@ def new(request):
 
 def detail(request, pk):
     try:
-        subscription = Subscription.objects.get(pk=pk)
+        signer = signing.Signer()
+        try:
+            pk_unsigned = signer.unsign(pk)
+        except signing.BadSignature:
+            raise Http404
+        subscription = Subscription.objects.get(pk=pk_unsigned)
+
     except Subscription.DoesNotExist:
         raise Http404
 

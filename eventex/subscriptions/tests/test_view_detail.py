@@ -1,3 +1,4 @@
+from django.core import signing
 from django.test import TestCase
 from eventex.subscriptions.models import Subscription
 
@@ -10,7 +11,9 @@ class SubscriptionDetailGet(TestCase):
             email='ldfsilva@gmail.com',
             phone='8179031476'
         )
-        self.resp = self.client.get('/inscricao/{}/'.format(self.obj.pk))
+        signer = signing.Signer()
+        pk_signed = signer.sign(self.obj.pk)
+        self.resp = self.client.get('/inscricao/{}/'.format(pk_signed))
 
     def test_get(self):
         self.assertEqual(200, self.resp.status_code)
@@ -29,6 +32,7 @@ class SubscriptionDetailGet(TestCase):
         with self.subTest():
             for expected in contents:
                 self.assertContains(self.resp, expected)
+
 
 class SubscriptionDetailNotFound(TestCase):
     def test_not_found(self):
