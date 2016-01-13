@@ -1,5 +1,6 @@
 from django.core import signing
 from django.test import TestCase
+from django.shortcuts import resolve_url as r
 from eventex.subscriptions.models import Subscription
 
 
@@ -13,7 +14,7 @@ class SubscriptionDetailGet(TestCase):
         )
         signer = signing.Signer()
         pk_signed = signer.sign(self.obj.pk)
-        self.resp = self.client.get('/inscricao/{}/'.format(pk_signed))
+        self.resp = self.client.get(r('subscriptions:detail', pk_signed))
 
     def test_get(self):
         self.assertEqual(200, self.resp.status_code)
@@ -36,5 +37,5 @@ class SubscriptionDetailGet(TestCase):
 
 class SubscriptionDetailNotFound(TestCase):
     def test_not_found(self):
-        resp = self.client.get('/inscricao/0/')
+        resp = self.client.get(r('subscriptions:detail', 0))
         self.assertEqual(404, resp.status_code)
