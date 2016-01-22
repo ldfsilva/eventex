@@ -1,8 +1,14 @@
 from django.contrib import admin
-from eventex.core.models import Speaker
+from eventex.core.models import Speaker, Contact
+
+
+class ContactInline(admin.TabularInline):
+    model = Contact
+    extra = 1
 
 
 class SpeakerModelAdmin(admin.ModelAdmin):
+    inlines = [ContactInline]
     prepopulated_fields = {'slug': ('name',)}
     list_display = ['name', 'photo_img', 'website_link']
 
@@ -20,4 +26,3 @@ class SpeakerModelAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Speaker, SpeakerModelAdmin)
-
