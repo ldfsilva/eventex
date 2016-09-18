@@ -25,7 +25,7 @@ cp contrib/env-sample .env
 python manage.py test
 ```
 
-## Como fazer o deploy?
+## Como fazer o deploy no heroku?
 
 1. Crie uma instância no heroku.
 2. Envie as configurações para o heroku.
@@ -41,4 +41,31 @@ heroku config:set SECRET_KEY=`python contrib/secret_gen.py`
 heroku config:set DEBUG=False
 #configurar email
 git push heroku master --force
+```
+
+## Como testar o ambiente de desenvolvimento no docker?
+
+1. Clone o repositório.
+2. Acesse o repositório wttd.
+3. Crie uma imagem docker.
+4. Execute o container da imagem wttd.
+
+Após este passo você poderá acessar a página no endereço IP da sua docker-machine na porta 8000.
+
+```console
+git clone git@github.com:ldfsilva/eventex.git wttd
+cd wttd
+docker build -t wttd .
+docker run --rm --name wttd_app -it --publish=8000:8000 wttd bash
+```
+
+Presume-se que você ja tenha docker instalado, a versão testada foi a seguinte:
+
+```console
+$ docker -v
+Docker version 1.10.3, build 20f81dd
+$
+$ docker-machine -v
+docker-machine version 0.6.0, build e27fb87
+$
 ```
